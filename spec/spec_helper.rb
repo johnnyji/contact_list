@@ -1,8 +1,5 @@
 require 'rspec'
-require 'pry'
-require './contact_database'
-require './contact_list'
-require './contact'
+require './config'
 require './application'
 
 RSpec.configure do |config|

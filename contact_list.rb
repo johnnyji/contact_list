@@ -1,6 +1,4 @@
-require 'pry'
-require_relative 'contact'
-require_relative 'contact_database'
+require './config'
 
 class ContactList
 
@@ -9,8 +7,8 @@ class ContactList
     secondary_command = ARGV[1]
 
     case initial_command
-    when 'show' then ContactDatabase.last
-    when 'find' then #find the user in the database based on the secondary command
+    when 'show' then ContactDatabase.search_by_id(secondary_command)
+    when 'find' then #nothing
     when 'new' then prompt_for_new_contact
     when 'list' then list_contacts
     else display_error_message

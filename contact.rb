@@ -1,10 +1,5 @@
-require 'csv'
-require 'pry'
-require './contact_database'
-
 class Contact
- 
-  attr_accessor :name, :email
+  attr_reader :name, :email
  
   def initialize(name, email)
     @name = name
@@ -24,22 +19,19 @@ class Contact
     end
   end
 
-  def self.increment_id
-    last_contact_id = ContactDatabase.last[:id].to_i
-    last_contact_id + 1
-  end
-
   def self.find(index)
     # TODO: Will find and return contact by index
-  end
-
-  def self.all
-    # TODO: Return the list of contacts, as is
   end
   
   def self.show(id)
     # TODO: Show a contact, based on ID
   end
-end
 
-Contact.create("Jerry", "haha")
+  private
+
+  def self.increment_id
+    last_contact_id = ContactDatabase.last[:id].to_i
+    last_contact_id + 1
+  end
+
+end
