@@ -8,18 +8,14 @@ class ContactList
 
     case initial_command
     when 'show' then ContactDatabase.search_by_id(secondary_command)
-    when 'find' then #nothing
+    when 'find' then 
     when 'new' then prompt_for_new_contact
-    when 'list' then list_contacts
+    when 'list' then ContactDatabase.list
     else display_error_message
     end
   end
 
   private
-
-  def self.list_contacts
-    puts ContactDatabase.all
-  end
 
   def self.display_error_message
     puts 'That was not a valid command'

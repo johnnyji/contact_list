@@ -10,7 +10,9 @@ class ContactDatabase
   end
 
   def self.list
-    self.parse_contacts_from_csv
+    self.parse_contacts_from_csv.each do |contact|
+      puts "#{contact[:id]}: #{contact[:name].capitalize} (#{contact[:email]})"
+    end
   end
 
   def self.search_by_id(id)
