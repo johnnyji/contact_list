@@ -10,6 +10,7 @@ class ContactList
     when 'help' then show_directory
     when 'show' then show_contact
     when 'find' then find_contact
+    when 'edit' then add_phone_number
     when 'new' then prompt_for_new_contact
     when 'list' then Contact.all
     else invalid_command
@@ -20,6 +21,10 @@ class ContactList
 
   def self.show_directory
     @@secondary_command.to_s.strip.empty? ? directory : invalid_command
+  end
+
+  def self.add_phone_number
+    Contact.add_phone_number(@@secondary_command)
   end
 
   def self.show_contact
@@ -52,6 +57,7 @@ class ContactList
     puts '   list'.colorize(:light_cyan) + ' - List all contacts'
     puts '   show'.colorize(:light_cyan) + ' - Show contact by ID'
     puts '   find'.colorize(:light_cyan) + ' - Find contact by Index'
+    puts '   edit'.colorize(:light_cyan) + ' - Add phone number to contact'
   end
 
   def self.invalid_command

@@ -1,9 +1,12 @@
 class Contact
   attr_reader :name, :email
+  attr_accessor :phone_type, :phone_number
  
-  def initialize(name, email)
+  def initialize(name, email, phone_type=nil ,phone_number=nil)
     @name = name
     @email = email
+    @phone_type = phone_type
+    @phone_number = phone_number
   end
 
   def create
@@ -21,6 +24,11 @@ class Contact
   
   ##### CLASS METHODS #####
 
+  def self.add_phone_number(contact)
+    contact = find(contact)
+
+  end
+
   def self.all
     ContactDatabase.list.each_with_index.map do |contact, index|
       format_display(index, contact).colorize(:light_cyan)
@@ -28,8 +36,7 @@ class Contact
   end
 
   def self.show(index)
-    contact = ContactDatabase.list[index].nil? ? not_found_message('ID', index) : ContactDatabase.list[index]
-    format_display(ContactDatabase.list.index(contact), contact)
+    ContactDatabase.list[index].nil? ? not_found_message('ID', index) : format_display(ContactDatabase.list.index(contact), contact)
   end
   
   def self.find(name)
