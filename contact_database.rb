@@ -9,18 +9,19 @@ class ContactDatabase
     data.map {|row| Hash[*headers.zip(row).flatten] }
   end
 
+  def self.format_contact_display(contact)
+    "#{contact[:id]}: #{contact[:name].capitalize} (#{contact[:email]})"
+  end
+
   def self.list
     self.parse_contacts_from_csv.each do |contact|
-      puts "#{contact[:id]}: #{contact[:name].capitalize} (#{contact[:email]})".colorize(:light_cyan)
+      puts self.format_contact_display(contact).colorize(:light_cyan)
     end
   end
 
   def self.search_by_id(id)
-    puts self.show(id) == [] ? "Sorry, no one by the ID of #{id} found!" : self.show(id)
-  end
-
-  def self.show(id)
-    self.list.select { |contact| contact[:id] == id }
+    found_contact = self.parse_contacts_from_csv.find { |contact| contact[:id] == id }
+    puts found_contact.nil? ? "Sorry, no one by the ID of #{id} found!" : self.format_contact_display(found_contact).colorize(:green)
   end
 
 end
