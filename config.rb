@@ -1,4 +1,5 @@
 require 'csv'
 require 'pry'
+require 'colorize'
 require './contact'
 require './contact_database'

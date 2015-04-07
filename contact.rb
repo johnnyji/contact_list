@@ -6,14 +6,8 @@ class Contact
     @email = email
   end
  
-  def to_s
-    # TODO: return string representation of Contact
-  end
- 
   ## Class Methods
   def self.create(name, email)
-
-    # TODO: Will initialize a contact as well as add it to the list of contacts
     CSV.open('./contacts.csv', 'a') do |csv|
       csv << [increment_id,name,email]
     end
@@ -30,7 +24,7 @@ class Contact
   private
 
   def self.increment_id
-    last_contact_id = ContactDatabase.last[:id].to_i
+    last_contact_id = ContactDatabase.list.last[:id].to_i
     last_contact_id + 1
   end
 

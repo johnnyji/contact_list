@@ -8,7 +8,7 @@ class ContactList
 
     case initial_command
     when 'show' then ContactDatabase.search_by_id(secondary_command)
-    when 'find' then 
+    when 'find' then #find by index
     when 'new' then prompt_for_new_contact
     when 'list' then ContactDatabase.list
     else display_error_message
