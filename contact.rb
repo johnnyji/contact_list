@@ -7,10 +7,16 @@ class Contact
   end
 
   def create
-    CSV.open('./contacts.csv', 'a') do |csv|
-      csv << [@name,@email]
+    existing_contact = ContactDatabase.list.find { |contact| contact.email == @email }
+    if existing_contact.nil?
+      CSV.open('./contacts.csv', 'a') do |csv|
+        csv << [@name,@email]
+      end
+      "Contact successfully created!".colorize(:green)
+    else
+      puts "#{@email} already exists!".colorize(:red)
+      ContactList.prompt_for_new_contact
     end
-    "Contact successfully created!".colorize(:green)
   end 
   
   ##### CLASS METHODS #####
