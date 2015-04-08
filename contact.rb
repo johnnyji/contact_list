@@ -1,19 +1,18 @@
 class Contact
   attr_reader :name, :email
-  attr_accessor :phone_type, :phone_number
+  attr_accessor :phone_numbers
  
-  def initialize(name, email, phone_type=nil ,phone_number=nil)
+  def initialize(name, email, phone_numbers=[])
     @name = name
     @email = email
-    @phone_type = phone_type
-    @phone_number = phone_number
+    @phone_numbers = phone_numbers
   end
 
   def create
     existing_contact = ContactDatabase.list.find { |contact| contact.email == @email }
     if existing_contact.nil?
       CSV.open('./contacts.csv', 'a') do |csv|
-        csv << [@name,@email]
+        csv << [@name,@email,@phone_numbers]
       end
       "Contact successfully created!".colorize(:green)
     else
@@ -26,10 +25,10 @@ class Contact
 
   def self.add_phone_number(contact)
     contact = ContactDatabase.retrieve_contact(contact)
-    CSV.open('./contacts.csv', 'a').find do |csv|
-      csv[2] == contact.email
+    CSV.open('./contacts.csv', 'a') do |csv|
+      csv.find {|contact| contact[1] == contact.email}
     end
-  end
+  end 
 
   def self.all
     ContactDatabase.list.each_with_index.map do |contact, index|
@@ -45,7 +44,6 @@ class Contact
   def self.find(name)
     contact = ContactDatabase.retrieve_contact(name)
     contact.nil? ? not_found_message('name', name) : format_display(ContactDatabase.list.index(contact), contact).colorize(:green)
-    binding.pry
   end
 
   private
@@ -55,7 +53,7 @@ class Contact
   end
 
   def self.format_display(index, contact)
-    "#{index}: #{contact.name} (#{contact.email})".colorize(:green)
+    "#{index}: #{contact.name} (#{contact.email}) #{contact.phone_numbers}".colorize(:green)
   end
 
 end

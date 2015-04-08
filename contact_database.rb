@@ -14,7 +14,7 @@ class ContactDatabase
 
   def self.read_database
     CSV.read('./contacts.csv').map do |contact|
-      @@contact_list << Contact.new(contact[0], contact[1])
+      @@contact_list << Contact.new(contact[0], contact[1], contact[2])
     end
   end
 

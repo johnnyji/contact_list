@@ -10,7 +10,6 @@ class ContactList
     when 'help' then show_directory
     when 'show' then show_contact
     when 'find' then find_contact
-    when 'add' then add_phone_number
     when 'new' then prompt_for_new_contact
     when 'list' then Contact.all
     else invalid_command
@@ -21,11 +20,6 @@ class ContactList
 
   def self.show_directory
     @@secondary_command.to_s.strip.empty? ? directory : invalid_command
-  end
-
-  def self.add_phone_number
-    @@secondary_command.to_s.strip.empty? ? Contact.add_phone_number(@@secondary_command.to_s) : invalid_command
-    binding.pry
   end
 
   def self.show_contact
@@ -44,7 +38,9 @@ class ContactList
   def self.prompt_for_new_contact
     name = prompt_user('Name: ')
     email = prompt_user('Email: ')
-    Contact.new(name, email).create
+    phone = Phone.create_phone_numbers
+    Contact.new(name, email, phone).create
+    #phone needs to be an array of phone numbers ["mobile: 1231231234", "home: 1231231234"]
   end
 
   def self.prompt_user(question)
