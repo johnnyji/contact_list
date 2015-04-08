@@ -25,8 +25,10 @@ class Contact
   ##### CLASS METHODS #####
 
   def self.add_phone_number(contact)
-    contact = find(contact)
-
+    contact = ContactDatabase.retrieve_contact(contact)
+    CSV.open('./contacts.csv', 'a').find do |csv|
+      csv[2] == contact.email
+    end
   end
 
   def self.all
@@ -36,20 +38,17 @@ class Contact
   end
 
   def self.show(index)
-    ContactDatabase.list[index].nil? ? not_found_message('ID', index) : format_display(ContactDatabase.list.index(contact), contact)
+    contact = ContactDatabase.list[index]
+    contact.nil? ? not_found_message('ID', index) : format_display(ContactDatabase.list.index(contact), contact)
   end
   
   def self.find(name)
-    contact = ContactDatabase.list.find { |contact| contact.name.downcase == name.downcase }
+    contact = ContactDatabase.retrieve_contact(name)
     contact.nil? ? not_found_message('name', name) : format_display(ContactDatabase.list.index(contact), contact).colorize(:green)
+    binding.pry
   end
 
   private
-
-  def increment_id
-    last_contact_id = ContactDatabase.parse_csv.last[:id].to_i
-    last_contact_id + 1
-  end
 
   def self.not_found_message(attribute, number)
     "Sorry, no one by the #{attribute} of #{number} found!".colorize(:red)

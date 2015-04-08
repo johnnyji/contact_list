@@ -10,7 +10,7 @@ class ContactList
     when 'help' then show_directory
     when 'show' then show_contact
     when 'find' then find_contact
-    when 'edit' then add_phone_number
+    when 'add' then add_phone_number
     when 'new' then prompt_for_new_contact
     when 'list' then Contact.all
     else invalid_command
@@ -24,7 +24,8 @@ class ContactList
   end
 
   def self.add_phone_number
-    Contact.add_phone_number(@@secondary_command)
+    @@secondary_command.to_s.strip.empty? ? Contact.add_phone_number(@@secondary_command.to_s) : invalid_command
+    binding.pry
   end
 
   def self.show_contact

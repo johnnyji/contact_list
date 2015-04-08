@@ -8,9 +8,13 @@ class ContactDatabase
     @@contact_list
   end
 
+  def self.retrieve_contact(name)
+    @@contact_list.find {|contact| contact.name.downcase == name.to_s.downcase}
+  end
+
   def self.read_database
-    CSV.read('./contacts.csv', 'r').map do |contact|
-      @@contact_list << Contact.new(contact[1], contact[2])
+    CSV.read('./contacts.csv').map do |contact|
+      @@contact_list << Contact.new(contact[0], contact[1])
     end
   end
 
