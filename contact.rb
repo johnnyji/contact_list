@@ -3,8 +3,7 @@ require 'pry'
 require 'colorize'
 
 class Contact
-  attr_reader :name, :email, :phone_numbers
-  attr_accessor :id
+  attr_reader :id, :name, :email, :phone_numbers
  
   def initialize(id, name, email, phone_numbers=[])
     @id = id
@@ -26,8 +25,8 @@ class Contact
   def existing_contact
     ContactDatabase.list.find { |contact| contact.email == @email }
   end
-  
-  ##### CLASS METHODS #####
+
+  ########## CLASS METHODS ##########
 
   def self.connection
     PG.connect(
@@ -39,21 +38,20 @@ class Contact
     )
   end
 
-  def self.all
+  def self.all #show all contacts
     connection.exec("SELECT * FROM contacts").map do |contact|
       format_display(contact)
     end
   end
 
-  def self.show_by_id(index)
+  def self.show_by_id(index) #find contact by ID
     contact = connection.exec("SELECT * FROM contacts WHERE id = '#{index.to_s}'").first
     contact.nil? ? not_found_message('ID', index) : format_display(contact)
   end
   
-  def self.find_by_name(first_name, last_name)
-    contact = connection.exec("SELECT * FROM contacts WHERE firstname = '#{first_name}' AND lastname = '#{last_name}'")
-    binding.pry
-    contact.nil? ? not_found_message('name', first_name) : format_display(contact)
+  def self.find_by_name(first_name, last_name) #find contact by name
+    contact = connection.exec("SELECT * FROM contacts WHERE firstname = '#{first_name}' AND lastname = '#{last_name}'").first
+    contact.nil? ? not_found_message('name', first_name + ' ' + last_name) : format_display(contact)
   end
 
   private
@@ -71,5 +69,3 @@ class Contact
     Contact.new(contact['id'], "#{contact['firstname'] + contact['lastname']}", contact['email'])
   end
 end
-
-puts Contact.find_by_name('Johnny', 'Ji')
