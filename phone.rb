@@ -14,10 +14,7 @@ class Phone
       phone_numbers << Phone.new(type, number)
       add_phone = prompt_user('Add phone? (y/n): ')
     end
-    numbers_array = phone_numbers.map do |phone|
-      "#{phone.type}: #{phone.number}"
-    end
-    numbers_array.join(", ")
+    phone_numbers.map { |phone| "#{phone.type}: #{phone.number}" }.join(", ")
   end
 
   def self.prompt_user(question)

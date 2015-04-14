@@ -40,7 +40,6 @@ class ContactList
     email = prompt_user('Email: ')
     phone = Phone.create_phone_numbers
     Contact.new(name, email, phone).create
-    #phone needs to be an array of phone numbers ["mobile: 1231231234", "home: 1231231234"]
   end
 
   def self.prompt_user(question)

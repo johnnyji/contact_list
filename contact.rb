@@ -1,6 +1,5 @@
 class Contact
-  attr_reader :name, :email
-  attr_accessor :phone_numbers
+  attr_reader :name, :email, :phone_numbers
  
   def initialize(name, email, phone_numbers=[])
     @name = name
@@ -9,26 +8,20 @@ class Contact
   end
 
   def create
-    existing_contact = ContactDatabase.list.find { |contact| contact.email == @email }
     if existing_contact.nil?
-      CSV.open('./contacts.csv', 'a') do |csv|
-        csv << [@name,@email,@phone_numbers]
-      end
+      CSV.open('./contacts.csv', 'a') { |csv| csv << [@name,@email,@phone_numbers] }
       "Contact successfully created!".colorize(:green)
     else
       puts "#{@email} already exists!".colorize(:red)
       ContactList.prompt_for_new_contact
     end
-  end 
+  end
+
+  def existing_contact
+    ContactDatabase.list.find { |contact| contact.email == @email }
+  end
   
   ##### CLASS METHODS #####
-
-  def self.add_phone_number(contact)
-    contact = ContactDatabase.retrieve_contact(contact)
-    CSV.open('./contacts.csv', 'a') do |csv|
-      csv.find {|contact| contact[1] == contact.email}
-    end
-  end 
 
   def self.all
     ContactDatabase.list.each_with_index.map do |contact, index|
