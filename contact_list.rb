@@ -1,17 +1,19 @@
 require './config'
 
 class ContactList
+
   @@initial_command = ARGV[0]
   @@secondary_command = ARGV[1]
+  @@tertiary_command = ARGV[2]
 
   def self.begin_app
-    ContactDatabase.read_database
+    Contact.connection
     case @@initial_command
     when 'help' then show_directory
-    when 'show' then show_contact
-    when 'find' then find_contact
+    when 'show' then format_show_contact #formats Contact.show_by_id
+    when 'find' then format_find_contact
     when 'new' then prompt_for_new_contact
-    when 'list' then Contact.all
+    when 'list' then format_contacts #formats Contact.all
     else invalid_command
     end
   end
@@ -22,17 +24,18 @@ class ContactList
     @@secondary_command.to_s.strip.empty? ? directory : invalid_command
   end
 
-  def self.show_contact
+  def self.format_show_contact
     return error('You must enter a valid ID to show') if @@secondary_command.to_s.strip.empty?
     return error('IDs must be positive (0 or greater)') if @@secondary_command.to_i < 0
     return error("#{@@secondary_command} is not a valid ID number!") if @@secondary_command.to_s.strip.match(/[^\d]/)
     Contact.show(@@secondary_command.to_i)
   end
 
-  def self.find_contact
+  def self.format_find_contact
     return error('You must enter a name to show') if @@secondary_command.to_s.strip.empty?
-    return error("Theres no one with the name of #{@@secondary_command.capitalize}") if @@secondary_command.to_s.strip.match(/[^a-zA-Z]/)
-    Contact.find(@@secondary_command)
+    return error('Please also provide a last name') if @@tertiary_command.to_s.strip.empty?
+    return error("Theres no one with the name of #{@@secondary_command.capitalize} #{@@tertiary_command.capitalize}") if @@secondary_command.to_s.strip.match(/[^a-zA-Z]/)
+    Contact.find_by_name(@@secondary_command, @@tertiary_command)
   end
 
   def self.prompt_for_new_contact
@@ -65,4 +68,4 @@ class ContactList
   end
 end
 
-puts ContactList.begin_app
+puts ContactList.connection

@@ -1,7 +1,13 @@
+require 'pg'
+require 'pry'
+require 'colorize'
+
 class Contact
   attr_reader :name, :email, :phone_numbers
+  attr_accessor :id
  
-  def initialize(name, email, phone_numbers=[])
+  def initialize(id, name, email, phone_numbers=[])
+    @id = id
     @name = name
     @email = email
     @phone_numbers = phone_numbers
@@ -23,30 +29,46 @@ class Contact
   
   ##### CLASS METHODS #####
 
+  def self.connection
+    PG.connect(
+      dbname: 'd96rfcutpr7g5e',
+      port: 5432,
+      user: 'rpdpzqtjsmvnbv',
+      host: 'ec2-54-163-225-82.compute-1.amazonaws.com',
+      password: 'cvuaKUHlD4wJ68QnHucjBNqQyx'
+    )
+  end
+
   def self.all
-    ContactDatabase.list.each_with_index.map do |contact, index|
-      format_display(index, contact).colorize(:light_cyan)
+    connection.exec("SELECT * FROM contacts").map do |contact|
+      format_display(contact)
     end
   end
 
-  def self.show(index)
-    contact = ContactDatabase.list[index]
-    contact.nil? ? not_found_message('ID', index) : format_display(ContactDatabase.list.index(contact), contact)
+  def self.show_by_id(index)
+    contact = connection.exec("SELECT * FROM contacts WHERE id = '#{index.to_s}'").first
+    contact.nil? ? not_found_message('ID', index) : format_display(contact)
   end
   
-  def self.find(name)
-    contact = ContactDatabase.retrieve_contact(name)
-    contact.nil? ? not_found_message('name', name) : format_display(ContactDatabase.list.index(contact), contact).colorize(:green)
+  def self.find_by_name(first_name, last_name)
+    contact = connection.exec("SELECT * FROM contacts WHERE firstname = '#{first_name}' AND lastname = '#{last_name}'")
+    contact.nil? ? not_found_message('name', first_name) : format_display(contact)
   end
 
   private
 
-  def self.not_found_message(attribute, number)
-    "Sorry, no one by the #{attribute} of #{number} found!".colorize(:red)
+  def self.not_found_message(attribute, result)
+    "Sorry, no one by the #{attribute} of #{result} found!".colorize(:red)
   end
 
-  def self.format_display(index, contact)
-    "#{index}: #{contact.name} (#{contact.email}) #{contact.phone_numbers}".colorize(:green)
+  def self.format_display(contact)
+     c = instantiate_contact(contact)
+    "#{c.id}: #{c.name} (#{c.email}) #{ct.phone_numbers unless c.phone_numbers.empty?}".colorize(:green)
   end
 
+  def self.instantiate_contact(contact)
+    Contact.new(contact['id'], "#{contact['firstname'] + contact['lastname']}", contact['email'])
+  end
 end
+
+puts Contact.find_by_name('Johnny', 'Ji')
