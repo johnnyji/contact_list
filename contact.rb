@@ -52,6 +52,7 @@ class Contact
   
   def self.find_by_name(first_name, last_name)
     contact = connection.exec("SELECT * FROM contacts WHERE firstname = '#{first_name}' AND lastname = '#{last_name}'")
+    binding.pry
     contact.nil? ? not_found_message('name', first_name) : format_display(contact)
   end
 
