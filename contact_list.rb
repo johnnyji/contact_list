@@ -65,13 +65,12 @@ class ContactList
     contact.phones.prompt_for_numbers
   end
 
-  # def self.prompt_for_update
-  #   first_name = prompt_user('Full name: ')
-  #   last_name = prompt_user('Last name: ')
-  #   email = prompt_user('Email: ')
-  #   phone_numbers = Phone.create_phone_numbers
-  #   Contact.update(@@secondary_command, first_name, last_name, email, phone_numbers)
-  # end
+  def self.prompt_for_update
+    first_name = prompt_user('Full name: ')
+    last_name = prompt_user('Last name: ')
+    email = prompt_user('Email: ')
+    Contact.update_attributes(firstname: first_name, lastname: last_name, email: email)
+  end
 
   def self.prompt_user(question)
     print question
@@ -96,9 +95,9 @@ class ContactList
     error.colorize(:red)
   end
 
-  # def self.not_found_message(attribute, result)
-  #   "Sorry, no one by the #{attribute} of #{result} found!".colorize(:red)
-  # end
+  def self.not_found_message(attribute, result)
+    "Sorry, no one by the #{attribute} of #{result} found!".colorize(:red)
+  end
 
 end
 
