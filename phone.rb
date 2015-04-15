@@ -1,11 +1,7 @@
-class Phone
-  attr_reader :type, :number
-  def initialize(type, number)
-    @type = type
-    @number = number
-  end
+class Phone < ActiveRecord::Base
+  belongs_to :contact
 
-  def self.create_phone_numbers
+  def self.prompt_for_numbers
     phone_numbers = []
     add_phone = prompt_user('Add phone? (y/n): ')
     while add_phone == 'y'

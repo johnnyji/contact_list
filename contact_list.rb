@@ -7,12 +7,11 @@ class ContactList
   @@tertiary_command = ARGV[2]
 
   def self.begin_app
-    Contact.connection
     case @@initial_command
     when 'help' then show_directory
     when 'show' then validate_show_contact
     when 'find' then validate_find_contact
-    when 'new' then prompt_for_contact
+    when 'new' then prompt_and_create_contact
     when 'update' then prompt_for_update
     when 'list' then display_all_contacts
     else invalid_command
@@ -26,7 +25,7 @@ class ContactList
   end
 
   def self.format_display(contact)
-    "#{contact.id}: ".colorize(:white) + "#{contact.first_name} #{contact.last_name} ".colorize(:magenta) + "(#{contact.email})".colorize(:light_cyan) + " #{contact.phone_numbers.nil? ? 'No phone entered' : contact.phone_numbers}".colorize(:green)
+    "#{contact.id}: ".colorize(:white) + "#{contact.firstname} #{contact.lastname} ".colorize(:magenta) + "(#{contact.email})".colorize(:light_cyan) + " #{contact.phonenumbers.nil? ? 'No phone entered' : contact.phonenumbers}".colorize(:green)
   end
 
   def self.show_directory
@@ -37,7 +36,7 @@ class ContactList
     return error('You must enter a valid ID to show') if @@secondary_command.to_s.strip.empty?
     return error('IDs must be positive (0 or greater)') if @@secondary_command.to_i < 0
     return error("#{@@secondary_command} is not a valid ID number!") if @@secondary_command.to_s.strip.match(/[^\d]/)
-    contact = Contact.show_by_id(@@secondary_command.to_i)
+    contact = Contact.find(@@secondary_command.to_i)
     contact.is_a?(Contact) ? format_display(contact) : not_found_message('ID', @@secondary_command)
   end
 
@@ -45,30 +44,30 @@ class ContactList
     return error('You must enter a name to show') if @@secondary_command.to_s.strip.empty?
     return error('Please also provide a last name') if @@tertiary_command.to_s.strip.empty?
     return error("Theres no one with the name of #{@@secondary_command.capitalize} #{@@tertiary_command.capitalize}") if @@secondary_command.to_s.strip.match(/[^a-zA-Z]/)
-    contact = Contact.find_by_name(@@secondary_command, @tertiary_command)
+    contact = Contact.find_by(firstname: @@secondary_command, lastname: @tertiary_command)
     contact.is_a?(Contact) ? format_display(contact) : not_found_message('name', @@secondary_command + ' ' + @@tertiary_command)
   end
 
-  def self.prompt_for_contact
+  def self.prompt_and_create_contact
     first_name = prompt_user('First name: ')
     last_name = prompt_user('Last name:')
     email = prompt_user('Email: ')
-    phone_numbers = Phone.create_phone_numbers
-    Contact.new(first_name, last_name, email, phone_numbers).create
+    phone_numbers = Phone.prompt_for_numbers
+    Contact.create(first_name, last_name, email, phone_numbers)
   end
 
-  def self.prompt_for_update
-    first_name = prompt_user('Full name: ')
-    last_name = prompt_user('Last name: ')
-    email = prompt_user('Email: ')
-    phone_numbers = Phone.create_phone_numbers
-    Contact.update(@@secondary_command, first_name, last_name, email, phone_numbers)
-  end
+  # def self.prompt_for_update
+  #   first_name = prompt_user('Full name: ')
+  #   last_name = prompt_user('Last name: ')
+  #   email = prompt_user('Email: ')
+  #   phone_numbers = Phone.create_phone_numbers
+  #   Contact.update(@@secondary_command, first_name, last_name, email, phone_numbers)
+  # end
 
-  def self.prompt_user(question)
-    print question
-    $stdin.gets.chomp
-  end
+  # def self.prompt_user(question)
+  #   print question
+  #   $stdin.gets.chomp
+  # end
 
   def self.directory
     puts 'Here is a list of avaliable commands:'.colorize(:magenta)
@@ -80,17 +79,17 @@ class ContactList
     puts '   edit'.colorize(:light_cyan) + '   Add phone number to contact'
   end
 
-  def self.invalid_command
-    'That was not a valid command'.colorize(:red)
-  end
+  # def self.invalid_command
+  #   'That was not a valid command'.colorize(:red)
+  # end
 
   def self.error(error)
     error.colorize(:red)
   end
 
-  def self.not_found_message(attribute, result)
-    "Sorry, no one by the #{attribute} of #{result} found!".colorize(:red)
-  end
+  # def self.not_found_message(attribute, result)
+  #   "Sorry, no one by the #{attribute} of #{result} found!".colorize(:red)
+  # end
 
 end
 
