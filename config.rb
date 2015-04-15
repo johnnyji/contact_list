@@ -9,8 +9,8 @@ require_relative 'phone'
 
 ActiveRecord::Base.establish_connection(
   adapter: "postgresql",
-  host: 'ec2-54-163-225-82.compute-1.amazonaws.com',
-  username: 'rpdpzqtjsmvnbv',
-  password: 'cvuaKUHlD4wJ68QnHucjBNqQyx',
-  database: 'd96rfcutpr7g5e'
+  host: 'ec2-23-23-81-189.compute-1.amazonaws.com',
+  username: 'ialdkhhdcbklat',
+  password: 'O4UezuX1JDcu1QRaRT-S1JDA6F',
+  database: 'd8mj58fuvafa0v'
 )

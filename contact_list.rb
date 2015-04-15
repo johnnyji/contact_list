@@ -25,7 +25,16 @@ class ContactList
   end
 
   def self.format_display(contact)
-    "#{contact.id}: ".colorize(:white) + "#{contact.firstname} #{contact.lastname} ".colorize(:magenta) + "(#{contact.email})".colorize(:light_cyan) + " #{contact.phonenumbers.nil? ? 'No phone entered' : contact.phonenumbers}".colorize(:green)
+    result = ""
+    result << "#{contact.id}: ".colorize(:white)
+    result << "#{contact.firstname} #{contact.lastname} ".colorize(:magenta)
+    result << "(#{contact.email})".colorize(:light_cyan)
+    result << " #{contact.phones.nil? ? 'No phone entered' : format_phone(contact.phones.all).join(', ')}".colorize(:green)
+    result
+  end
+
+  def self.format_phone(phones)
+    phones.map { |phone| "#{phone.phonetype}: #{phone.number}"}
   end
 
   def self.show_directory
