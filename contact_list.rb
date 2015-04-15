@@ -52,8 +52,8 @@ class ContactList
     first_name = prompt_user('First name: ')
     last_name = prompt_user('Last name:')
     email = prompt_user('Email: ')
-    phone_numbers = Phone.prompt_for_numbers
-    Contact.create(first_name, last_name, email, phone_numbers)
+    contact = Contact.create(firstname: first_name, lastname: last_name, email: email)
+    contact.phones.prompt_for_numbers
   end
 
   # def self.prompt_for_update
@@ -64,10 +64,10 @@ class ContactList
   #   Contact.update(@@secondary_command, first_name, last_name, email, phone_numbers)
   # end
 
-  # def self.prompt_user(question)
-  #   print question
-  #   $stdin.gets.chomp
-  # end
+  def self.prompt_user(question)
+    print question
+    $stdin.gets.chomp
+  end
 
   def self.directory
     puts 'Here is a list of avaliable commands:'.colorize(:magenta)
@@ -79,9 +79,9 @@ class ContactList
     puts '   edit'.colorize(:light_cyan) + '   Add phone number to contact'
   end
 
-  # def self.invalid_command
-  #   'That was not a valid command'.colorize(:red)
-  # end
+  def self.invalid_command
+    'That was not a valid command'.colorize(:red)
+  end
 
   def self.error(error)
     error.colorize(:red)

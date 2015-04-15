@@ -4,8 +4,8 @@ require 'csv'
 require 'pry'
 require 'colorize'
 require 'active_record'
-require './contact'
-require './phone'
+require_relative 'contact'
+require_relative 'phone'
 
 ActiveRecord::Base.establish_connection(
   adapter: "postgresql",
