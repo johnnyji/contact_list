@@ -61,7 +61,7 @@ class ContactList
     first_name = prompt_user('Full name: ')
     last_name = prompt_user('Last name: ')
     email = prompt_user('Email: ')
-    phone = Phone.create_phone_numbers
+    phone_numbers = Phone.create_phone_numbers
     Contact.update(@@secondary_command, first_name, last_name, email, phone_numbers)
   end
 

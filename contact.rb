@@ -18,11 +18,6 @@ class Contact
     'Thanks for the addition!'.colorize(:green)
   end
 
-  def update(id, first_name, last_name, email, phone_numbers)
-    Contact.connection.exec("UPDATE contacts SET firstname='#{first_name}',lastname='#{last_name}', email='#{email}', phonenumbers='#{phone_numbers}' WHERE id = '#{id.to_i}'")
-    "Thanks! We've updated them for you.".colorize(:green)
-  end
-
   ########## CLASS METHODS ##########
 
   def self.connection
@@ -33,6 +28,11 @@ class Contact
       host: 'ec2-54-163-225-82.compute-1.amazonaws.com',
       password: 'cvuaKUHlD4wJ68QnHucjBNqQyx'
     )
+  end
+
+  def self.update(id, first_name, last_name, email, phone_numbers)
+    Contact.connection.exec("UPDATE contacts SET firstname='#{first_name}',lastname='#{last_name}', email='#{email}', phonenumbers='#{phone_numbers}' WHERE id = '#{id.to_i}'")
+    "Thanks! We've updated them for you.".colorize(:green)
   end
 
   def self.all #show all contacts
